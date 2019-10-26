@@ -129,7 +129,7 @@ int main() {
 		*/
 		
 		G.eraseContainers();	
-		break;
+		// break;
 	}
 		
 	return 0;
