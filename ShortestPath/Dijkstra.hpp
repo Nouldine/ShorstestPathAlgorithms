@@ -16,6 +16,14 @@
 #include <unordered_set>
 #include <set>
 #include <algorithm>
+#include <experimental/filesystem>
+
+namespace file_sys = std::experimental::filesystem;
+
+
+
+#define INF 200000000 
+
 
 
 class Graph 
@@ -27,7 +35,10 @@ class Graph
 		void add_edges( int, int, int );
 		void DijkstraShortestPath( int , int );
 		std::vector<int> randomSourceDest( int );
-		void BiDijkstraShortestPath( int, int );
+		void BiDijkstraShortestPath( int , int );
+		void eraseContainers();
+		std::unordered_set<int> generateSource( int );
+		std::unordered_set<int> generateDestination( int, std::unordered_set<int> ); 
 		int num_vert;
 		int relaxed_edges;
 		int relaxed_edges_1;
@@ -37,11 +48,14 @@ class Graph
 		int vertices;
 		std::list< std::pair< int, int > > *adjcancy_list;
 
-		std::priority_queue< std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater< std::pair<int, int>>>  min_heap; 	
+		std::priority_queue< std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater< std::pair<int, int>> >  min_heap; 	
 
-		std::priority_queue< std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater<std::pair<int, int>>>  min_heap_;
+		std::priority_queue< std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater< std::pair<int, int>> >  min_heap_;
 
-		std::priority_queue< std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater< std::pair<int, int>>>  min_heap_reverse;
+		std::priority_queue< std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater< std::pair<int, int>> >  min_heap_reverse;
+
 };
 
 #endif
+
+
