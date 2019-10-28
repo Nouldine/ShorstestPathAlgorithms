@@ -5,7 +5,7 @@ void Graph::allocateMemory( int vertices )
 {
 	std::cout <<"Calling Graph::allocateMemory( int vertices )" << std::endl;
 	this->vertices = vertices;
-	adjcancy_list = new std::list<std::pair<int, int>>[ vertices ];
+	adjacency_list = new std::list<std::pair<int, int>>[ vertices ];
 }
 
 void Graph::buildGraph( std::ifstream & my_file ) 
@@ -58,7 +58,7 @@ void Graph::buildGraph( std::ifstream & my_file )
    }
 	  /*	
 	  std::cout <<"Content_0: " << std::endl;
-          for( auto content : *adjcancy_list )
+          for( auto content : *adjacency_list )
                    std::cout << content.first <<"," << content.second << " ";
           std::cout << std::endl;
 	  */
@@ -73,13 +73,13 @@ void Graph::add_edges( int my_vertex_1, int my_vertex_2, int my_weight )
 	  //std::cout <<"my_vertex_1: " << my_vertex_1 << " " <<
  	 //"my_vertex_2: " << my_vertex_2 <<" " <<"weight: " << my_weight << std::endl;
 	// std::cout <<"Calling Graph::add_edges( int my_vertex_1, int my_vertex_2, int my_weight )" << std::endl;
-	adjcancy_list[ my_vertex_1 ].push_back( std::make_pair( my_vertex_2, my_weight ));
-	adjcancy_list[ my_vertex_2 ].push_back( std::make_pair( my_vertex_1, my_weight ));
+	adjacency_list[ my_vertex_1 ].push_back( std::make_pair( my_vertex_2, my_weight ));
+	adjacency_list[ my_vertex_2 ].push_back( std::make_pair( my_vertex_1, my_weight ));
 
 	/*	
 	std::cout <<"My test1: " << std::endl;
-	for( auto it = adjcancy_list[ my_vertex_1 ].begin(); it != adjcancy_list[ my_vertex_1 ].end(); ++it )
-		std::cout <<"Size: "<< adjcancy_list[ my_vertex_1 ].size() <<" "<<"It first: " <<  (*it).first <<" " << (*it).second << std::endl;
+	for( auto it = adjacency_list[ my_vertex_1 ].begin(); it != adjacency_list[ my_vertex_1 ].end(); ++it )
+		std::cout <<"Size: "<< adjacency_list[ my_vertex_1 ].size() <<" "<<"It first: " <<  (*it).first <<" " << (*it).second << std::endl;
 	*/
 }
 
@@ -114,10 +114,10 @@ void Graph::DijkstraShortestPath( int source , int destination )
 			 return;
 		}
 		 // std::cout <<"top_vertex_reverse: " << top_vertex_reverse << std::endl;
-                 //std::cout <<"adjacency: " << adjcancy_list[ top_vertex ].size() << std::endl;
+                 //std::cout <<"adjacency: " << adjacency_list[ top_vertex ].size() << std::endl;
 
 
-		for( auto iter = adjcancy_list[ top_vertex ].begin(); iter != adjcancy_list[ top_vertex ].end(); ++iter ) { 
+		for( auto iter = adjacency_list[ top_vertex ].begin(); iter != adjacency_list[ top_vertex ].end(); ++iter ) { 
 
 			int vertex_v = (*iter).first; 
 			// std::cout <<"vertex_v: " << vertex_v << std::endl;
@@ -192,7 +192,7 @@ void Graph::BiDijkstraShortestPath( int source, int destination )
 		min_heap_.pop();
 		close_forward.insert(top_vertex);
 		
-		for( auto iter = adjcancy_list[ top_vertex ].begin(); iter != adjcancy_list[ top_vertex ].end(); ++iter ) { 
+		for( auto iter = adjacency_list[ top_vertex ].begin(); iter != adjacency_list[ top_vertex ].end(); ++iter ) { 
 
 			int vertex_v = ( *iter ).first;
 			int length = distance[ top_vertex ] + ( *iter ).second;
@@ -225,7 +225,7 @@ void Graph::BiDijkstraShortestPath( int source, int destination )
 		min_heap_reverse.pop();
 		close_reverse.insert(top_vertex_reverse);
 
-		for( auto iter_1 = adjcancy_list[ top_vertex_reverse ].begin(); iter_1 != adjcancy_list[ top_vertex_reverse ].end(); ++iter_1 )
+		for( auto iter_1 = adjacency_list[ top_vertex_reverse ].begin(); iter_1 != adjacency_list[ top_vertex_reverse ].end(); ++iter_1 )
 		{
 			int vertex_v_reverse = ( *iter_1 ).first;
 			int length_1 = reverse_distance[ top_vertex_reverse ] + ( *iter_1 ).second; 
@@ -267,7 +267,7 @@ void Graph::eraseContainers()
 	while( !min_heap_reverse.empty() )
 		min_heap_reverse.pop();
 	
-	adjcancy_list->clear(); 
+	adjacency_list->clear(); 
 }
 
 std::unordered_set<int> Graph::generateSource( int vertices )

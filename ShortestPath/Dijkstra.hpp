@@ -17,6 +17,7 @@
 #include <set>
 #include <algorithm>
 #include <experimental/filesystem>
+#include <memory>
 
 namespace file_sys = std::experimental::filesystem;
 
@@ -42,11 +43,14 @@ class Graph
 		int num_vert;
 		int relaxed_edges;
 		int relaxed_edges_1;
-		~Graph(){}
+		~Graph()
+		{
+			delete adjacency_list;
+		}
 
 	private:
 		int vertices;
-		std::list< std::pair< int, int > > *adjcancy_list;
+		std::list< std::pair< int, int > > *adjacency_list;
 
 		std::priority_queue< std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater< std::pair<int, int>> >  min_heap; 	
 

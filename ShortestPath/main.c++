@@ -5,7 +5,7 @@
 int main() { 
 
 	Graph G;
-	std::string path = "Testfiles"; 
+	std::string path = "../../Testfiles"; 
 	std::ifstream my_file;
 
 	for( const auto  & entry : file_sys::directory_iterator(path) )
