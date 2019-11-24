@@ -5,7 +5,7 @@
 int main() { 
 
 	Graph G;
-	std::string path = "../../Testfiles"; 
+	std::string path = "../../Testfiles/ProcessingFile"; 
 	std::ifstream my_file;
 
 	for( const auto  & entry : file_sys::directory_iterator(path) )
@@ -39,8 +39,8 @@ int main() {
                 double total_duration_1 = 0.0;
                 double average_duration_1 = 0.0;
 
-		std::set<std::pair<double, int>> averages;
-		 std::set<std::pair<double, int>> averages_1;
+		std::set< std::pair<double, int >> averages;
+		std::set< std::pair<double, int >> averages_1;
 		int counter_1 = 0;
 		std::unordered_set<int> my_source_set = G.generateSource( G.num_vert );
 		std::unordered_set<int> my_destinations = G.generateDestination( G.num_vert, my_source_set );
@@ -52,6 +52,8 @@ int main() {
 
 			for( auto it = my_destinations.begin(); it != my_destinations.end(); ++it )
 			{
+				//std::cout <<"Running" << std::endl;
+				
 				std::cout <<"Counter: "<< counter <<" "<<"Counter_1: "<< ++counter_1 <<" "<<"Source: " << *iter << " " << "Destination: "<< *it << std::endl;
 			
 				clock_t begin_0 = clock();
@@ -59,15 +61,15 @@ int main() {
 				clock_t end_0 = clock();
 				double duration_0 = double( end_0 - begin_0 ) / CLOCKS_PER_SEC;
                 		
-				std::cout << std::endl;	
-				std::cout <<"DijkstraShortestPath duration: " <<  duration_0 << std::endl;
-				std::cout <<"Relaxed_edges: " << G.relaxed_edges << std::endl;
+				//std::cout << std::endl;	
+				//std::cout <<"DijkstraShortestPath duration: " <<  duration_0 << std::endl;
+				//std::cout <<"Relaxed_edges: " << G.relaxed_edges << std::endl;
 				
 				total_duration += duration_0;
 				total_relaxed_edges += G.relaxed_edges;
 				G.relaxed_edges = 0;
 	
-				std::cout << std::endl;
+				//std::cout << std::endl;
 			
 
 				clock_t begin_1 = clock();
@@ -75,8 +77,8 @@ int main() {
                 		clock_t end_1 = clock();
 
                 		double duration_1 = double( end_1 - begin_1 ) /  CLOCKS_PER_SEC;
-               			std::cout <<"BiDijkstraShortestPath duration: " << duration_1 << std::endl;
-                		std::cout <<"Relaxed_edges: " <<  G.relaxed_edges_1 << std::endl;
+               			//std::cout <<"BiDijkstraShortestPath duration: " << duration_1 << std::endl;
+                		//std::cout <<"Relaxed_edges: " <<  G.relaxed_edges_1 << std::endl;
 				
 				total_duration_1 += duration_1;
                                 total_relaxed_edges_1 += G.relaxed_edges_1;
@@ -87,30 +89,62 @@ int main() {
 			// Getting averages from the Dijkstra algorithm
 			average_duration = ( total_duration / 100.0 );
 			av_relaxed_edges = ( total_relaxed_edges / 100 );
-			averages.insert(std::make_pair( average_duration, av_relaxed_edges ));
-			
+			averages.insert( std::make_pair( average_duration, av_relaxed_edges ));
+			total_duration = 0;
+			total_relaxed_edges = 0;
+						
 			// Getting averages from then Bidirectional Dijkstra algorithm
 			average_duration_1 = ( total_duration_1 / 100.0 );
                         av_relaxed_edges_1 = ( total_relaxed_edges_1 / 100 );
-                        averages_1.insert(std::make_pair( average_duration_1, av_relaxed_edges_1 ));
-
+                        averages_1.insert( std::make_pair( average_duration_1, av_relaxed_edges_1 ));
+			total_duration_1 = 0;
+			total_relaxed_edges_1 = 0;
 			counter_1 = 0;
 
 		}
 
+	
+		/*	
+		for( auto iter = my_source_set.begin(); iter != my_source_set.end(); ++iter )
+
+			std::cout <<"Source Vertex: " << *iter  << std::endl;
+		*/
+
+		// std::cout << std::endl;
 
 		// Dijkstra averages set 
-		std::cout <<"Dijkstra averages set " << std::endl;
-		for( auto iter = averages.begin(); iter != averages.end(); ++iter )
-			std::cout <<"Average durations: " << (*iter).first <<" " <<"Average Relaxed edges: "<< (*iter).second << std::endl;
+		std::cout <<"Dijkstra averages set "<< std::endl; 
+		double total_dur_0 = 0;
+		int total_edge_0 = 0;
+		for( auto iter = averages.begin(); iter != averages.end(); ++iter ) {
 
+			total_dur_0 += (*iter).first;
+			total_edge_0 += (*iter).second;
+			// std::cout <<"Average durations: " << (*iter).first <<" " <<"Average Relaxed edges: "<< (*iter).second << std::endl;		
+		
+		}
+		
+		std::cout << std::endl;
+		
+		std::cout <<"Final Average time: " << ( total_dur_0 / 10 ) << std::endl;
+		std::cout <<"Final Average Edges relaxed: " << ( total_edge_0 / 10 ) << std::endl;
+		
 		std::cout << std::endl;
 
 		// Bidirectiona averages set
 		std::cout <<"Bidirectional averages set" << std::endl;
-		for( auto iter = averages_1.begin(); iter != averages_1.end(); ++iter )
-			std::cout <<"Average durations: " << (*iter).first <<" " <<"Average Relaxed edges: "<< (*iter).second << std::endl;
+		double total_dur = 0;
+		int total_ed =  0;		
+		for( auto iter = averages_1.begin(); iter != averages_1.end(); ++iter ) {
+			
+			total_dur += (*iter).first;
+			total_ed += (*iter).second; 
+			//std::cout <<"Average durations: " << (*iter).first <<" " <<"Average Relaxed edges: "<< (*iter).second << std::endl;
+		}
 
+		std::cout << std::endl;
+		std::cout <<"Final Average time: " << ( total_dur / 10 ) << std::endl;
+		std::cout <<"Final Average Edge relaxed: " << ( total_ed / 10 ) << std::endl;
 		/*
 		double duration_0 = double( end_0 - begin_0 ) / CLOCKS_PER_SEC; 
 		std::cout <<"DijkstraShortestPath duration: " <<  duration_0 << std::endl;
@@ -127,8 +161,9 @@ int main() {
 		//G.DijkstraShortestPath( 3, 4 );
 		//G.DijkstraShortestPath( 0 , 1048571 );
 		*/
-		
-		G.eraseContainers();	
+		break;
+		std::cout << std::endl;
+		// G.eraseContainers();	
 		// break;
 	}
 		

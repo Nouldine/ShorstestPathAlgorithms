@@ -92,7 +92,7 @@ void Graph::DijkstraShortestPath( int source , int destination )
 	
 	for( int i = 0; i < vertices; ++i )
 	{
-		parent[ i ] = 0; 
+		//parent[ i ] = 0; 
 		distance[ i ] = INT_MAX;
 	}
 
@@ -129,7 +129,7 @@ void Graph::DijkstraShortestPath( int source , int destination )
 				{
 					++relaxed_edges;
 					distance[ vertex_v  ] = length;
-					parent[ vertex_v ] = top_vertex;
+					//parent[ vertex_v ] = top_vertex;
 					min_heap.push( std::make_pair( distance[ vertex_v ], vertex_v ));
 				}
 			}
@@ -274,8 +274,10 @@ std::unordered_set<int> Graph::generateSource( int vertices )
 {
 	 std::cout <<"Calling std::vector<int> Graph::genereateSource( int vertices )" << std::endl;
 	 std::unordered_set<int> my_source_set;
-	 int source_num = 10;
-
+	 int source_num = 10; 
+		
+	std::srand(0);
+	
 	 for( int i = 0; i < source_num; ++i )  {
 		 
 		 int source = rand() % vertices + 1;
@@ -293,14 +295,20 @@ std::unordered_set<int> Graph::generateDestination( int vertices, std::unordered
 	std::cout <<"Calling std::unordered_set<int> generateDestination( int vertices ) " << std::endl;
 	std::unordered_set<int> my_destination_set;
 	int num_destination = 100;
+	std::srand(0);
+
 	
 	for( int i = 0; i < num_destination; ++i ) { 
-
+	
+		// std::cout <<"Here " << std::endl;
 		int destination = rand() % vertices + 1; 
 		while( my_destination_set.find(destination) != my_destination_set.end() or my_source_set.find(destination) != my_source_set.end() )  
+		{
 			destination = rand() % vertices + 1;
-
+		}
+		
 		my_destination_set.insert(destination);
+
 	}
 
 	return my_destination_set;
