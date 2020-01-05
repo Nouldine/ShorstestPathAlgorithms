@@ -1,11 +1,11 @@
 
 //#include "Dijkstra.c++"
-#include "Dijkstra_1.c++"
+#include "Dijkstra.c++"
 
 int main() { 
 
 	Graph G;
-	std::string path = "../../Testfiles/ProcessingFile"; 
+	std::string path = "../../../../Documents/Fall_2019/SpecialStudies/Projects/ShortestPathAlgo/Graph/Dijkstra/DataDIMACS/TestFile/"; 
 	std::ifstream my_file;
 
 	for( const auto  & entry : file_sys::directory_iterator(path) )
