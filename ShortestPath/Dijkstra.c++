@@ -139,7 +139,7 @@ void Graph::BiDijkstraShortestPath(int source, int destination)
 
 	min_heap_.push(std::make_pair(distance[source], source));
 	min_heap_reverse.push(std::make_pair(reverse_distance[destination], destination));
-	auto mui = INT_MAX;
+	auto mui = INF;
 
 	while (!min_heap_.empty() and !min_heap_reverse.empty())
 	{
