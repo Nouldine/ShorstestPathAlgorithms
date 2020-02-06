@@ -1,23 +1,39 @@
 
 #include "Dijkstra.hpp"
 
-void Graph::allocateMemory(int vertices)
-{
-	// std::cout <<"Calling Graph::allocateMemory( int vertices )" << std::endl;
-	this->vertices = vertices;
-	adjacency_list = new std::list<std::pair<int, int>>[vertices];
+int Graph::getVertices( std::ifstream & my_file ) {
+
+	std::cout <<"Calling int Graph::getVertices( std::ifstream & my_file )" << std::endl; 
+	int my_vertices, num_edges;
+
+	if( my_file.is_open() ) 
+	{
+		std::cout <<"The file is oponned" << std::endl;
+		if( my_file.good() ) 
+		{
+			// std::cout <<"The file is good" << std::endl;
+			std::string str;
+			std::getline( my_file, str );
+			std::istringstream my_first_line(str);
+			my_first_line >> my_vertices >> num_edges;
+			 
+			//std::cout <<"MyVertices: " << my_vertices << std::endl;
+			return my_vertices;
+		}
+	}
+	
+	return 0;
 }
 
 void Graph::buildGraph(std::ifstream &my_file)
 {
-	//std::cout <<"Calling Grap::buildGraph( std::ifstream & my_file )" << std::endl;
+	std::cout <<"Calling Grap::buildGraph( std::ifstream & my_file )" << std::endl;
 	int num_vertices, num_edges;
 
-	if (my_file.is_open())
+	if(my_file.is_open())
 	{
-
 		std::cout << "The file is openned " << std::endl;
-		if (my_file.good())
+		if( my_file.good() )
 		{
 			std::string str;
 			std::getline(my_file, str);
@@ -26,33 +42,32 @@ void Graph::buildGraph(std::ifstream &my_file)
 		}
 
 		int num_edges_counter = num_edges + 1;
-		allocateMemory(num_vertices);
+		// allocateMemory(num_vertices);
+		vertices = num_vertices;
 		std::cout << "num_vertices: " << num_vertices << std::endl;
-		num_vert = num_vertices;
+		// num_vert = num_vertices;
 
-		while (--num_edges_counter)
+		while( --num_edges_counter )
 		{
 			std::string string_len;
 
-			if (my_file && std::getline(my_file, string_len))
+			if( my_file && std::getline(my_file, string_len ))
 			{
 				int my_vertex_1, my_vertex_2, weight;
 				std::istringstream ss_stream(string_len);
 
-				if (ss_stream >> my_vertex_1 >> my_vertex_2 >> weight)
-				{
-					add_edges(my_vertex_1, my_vertex_2, weight);
-				}
+				if( ss_stream >> my_vertex_1 >> my_vertex_2 >> weight )
+					add_edges( my_vertex_1, my_vertex_2, weight );
 			}
 		}
 	}
 }
 
-void Graph::add_edges(int my_vertex_1, int my_vertex_2, int my_weight)
+void Graph::add_edges( int my_vertex_1, int my_vertex_2, int my_weight )
 {
 	//std::cout <<"Calling Graph::add_edges( int my_vertex_1, int my_vertex_2, int my_weight )" << std::endl;
-	adjacency_list[my_vertex_1].push_back( std::make_pair(my_vertex_2, my_weight ));
-	adjacency_list[my_vertex_2].push_back( std::make_pair(my_vertex_1, my_weight ));
+	adjacency_list[ my_vertex_1 ].push_back( std::make_pair( my_vertex_2, my_weight ));
+	adjacency_list[ my_vertex_2 ].push_back( std::make_pair( my_vertex_1, my_weight ));
 }
 
 void Graph::DijkstraShortestPath(int source, int destination)
@@ -120,7 +135,6 @@ void Graph::DijkstraShortestPath(int source, int destination)
 
 void Graph::BiDijkstraShortestPath(int source, int destination)
 {
-
 	// std::cout <<"Calling Graph::BiDijkstraShortestPath( int source, int destination )"  << std::endl;
 	std::unordered_map<int, int> distance;
 	std::unordered_map<int, int> reverse_distance;
@@ -161,7 +175,7 @@ void Graph::BiDijkstraShortestPath(int source, int destination)
 		for (auto iter = adjacency_list[top_vertex].begin(); iter != adjacency_list[top_vertex].end(); ++iter)
 		{
 			int vertex_v = (*iter).first;
-			int length = distance[top_vertex] + (*iter).second;
+			int length = distance[ top_vertex ] + (*iter).second;
 
 			if (close_forward.find(vertex_v) == close_forward.end())
 			{
@@ -169,8 +183,8 @@ void Graph::BiDijkstraShortestPath(int source, int destination)
 				{
 
 					distance[vertex_v] = length;
-					min_heap_.push(std::make_pair(distance[vertex_v], vertex_v));
-					int new_length = length + reverse_distance[vertex_v];
+					min_heap_.push( std::make_pair( distance[ vertex_v ], vertex_v ));
+					int new_length = length + reverse_distance[ vertex_v ];
 
 					if (new_length < mui)
 					{
@@ -185,19 +199,19 @@ void Graph::BiDijkstraShortestPath(int source, int destination)
 
 		int top_vertex_reverse = min_heap_reverse.top().second;
 		min_heap_reverse.pop();
-		close_reverse.insert(top_vertex_reverse);
+		close_reverse.insert( top_vertex_reverse );
 
-		for (auto iter_1 = adjacency_list[top_vertex_reverse].begin(); iter_1 != adjacency_list[top_vertex_reverse].end(); ++iter_1)
+		for( auto iter_1 = adjacency_list[ top_vertex_reverse ].begin(); iter_1 != adjacency_list[ top_vertex_reverse ].end(); ++iter_1)
 		{
-			int vertex_v_reverse = (*iter_1).first;
-			int length_1 = reverse_distance[top_vertex_reverse] + (*iter_1).second;
-			if (length_1 < reverse_distance[vertex_v_reverse])
+			int vertex_v_reverse = ( *iter_1 ).first;
+			int length_1 = reverse_distance[ top_vertex_reverse ] + ( *iter_1 ).second;
+			if ( length_1 < reverse_distance[ vertex_v_reverse ] )
 			{
-				reverse_distance[vertex_v_reverse] = length_1;
-				min_heap_reverse.push(std::make_pair(reverse_distance[vertex_v_reverse], vertex_v_reverse));
-				int my_new_length = length_1 + distance[vertex_v_reverse];
+				reverse_distance[ vertex_v_reverse ] = length_1;
+				min_heap_reverse.push( std::make_pair(reverse_distance[ vertex_v_reverse ], vertex_v_reverse ));
+				int my_new_length = length_1 + distance[ vertex_v_reverse ];
 
-				if (my_new_length < mui)
+				if( my_new_length < mui )
 				{
 					mui = my_new_length;
 					//std::cout <<"mui_1: " << mui << std::endl;
@@ -222,10 +236,11 @@ void Graph::eraseContainers()
 	while (!min_heap_reverse.empty())
 		min_heap_reverse.pop();
 
-	adjacency_list->clear();
+	delete [] adjacency_list;
+
 }
 
-std::unordered_set<int> Graph::generateSource(int vertices)
+std::unordered_set<int> Graph::generateSource( int vertices )
 {
 	// std::cout <<"Calling std::vector<int> Graph::genereateSource( int vertices )" << std::endl;
 	std::unordered_set<int> my_source_set;
@@ -234,29 +249,28 @@ std::unordered_set<int> Graph::generateSource(int vertices)
 
 	for (int i = 0; i < source_num; ++i)
 	{
-
 		int source = rand() % vertices + 1;
 		while (my_source_set.find(source) != my_source_set.end())
 			source = rand() % vertices + 1;
 
 		my_source_set.insert(source);
-	}
+	}	
 
 	return my_source_set;
 }
 
-std::unordered_set<int> Graph::generateDestination(int vertices, std::unordered_set<int> my_source_set)
+std::unordered_set<int> Graph::generateDestination( int vertices, std::unordered_set<int> my_source_set )
 {
 	// std::cout <<"Calling std::unordered_set<int> generateDestination( int vertices ) " << std::endl;
 	std::unordered_set<int> my_destination_set;
 	int num_destination = 100;
 	std::srand(0);
 
-	for (int i = 0; i < num_destination; ++i)
+	for( int i = 0; i < num_destination; ++i )
 	{
 		// std::cout <<"Here " << std::endl;
 		int destination = rand() % vertices + 1;
-		while (my_destination_set.find(destination) != my_destination_set.end() or my_source_set.find(destination) != my_source_set.end())
+		while( my_destination_set.find(destination) != my_destination_set.end() or my_source_set.find(destination) != my_source_set.end() )
 		{
 			destination = rand() % vertices + 1;
 		}
@@ -265,4 +279,140 @@ std::unordered_set<int> Graph::generateDestination(int vertices, std::unordered_
 	}
 
 	return my_destination_set;
+}
+
+void Graph::automateProcess() { 
+
+	std::string path = "../../TestFiles";
+
+	for( const auto & entry : file_sys::directory_iterator(path) ) {
+
+		std::cout <<"Test1" << std::endl;
+		std::ifstream my_file;
+		std::cout <<"Running..." << std::endl;
+		my_file.open( entry.path(), std::ios_base::in );
+		std::cout <<"File: "<< entry.path() << std::endl;
+		vertices = getVertices( my_file );
+		my_file.close();
+		if( vertices <= 0 )
+			break;
+
+		my_file.open( entry.path(), std::ios_base::in );
+		adjacency_list = new std::list< std::pair<int, int> >[ vertices ];
+		buildGraph( my_file );
+		
+		// Variables Dijkstra's Algorithm
+	        int total_relaxed_edges = 0;
+		int av_relaxed_edges = 0;	
+		double total_duration = 0.0;
+		double average_duration = 0.0;
+
+		// Variables for the Bidirectional Dijkstra's Algorithm
+		int total_relaxed_edges_1 = 0;
+		int av_relaxed_edges_1 = 0;
+		double total_duration_1 = 0.0;
+		double average_duration_1 = 0.0;
+
+		// Define containers to gather the appropriate information
+		std::vector< std::pair< double, int > > averages;
+		std::vector< std::pair< double, int > > averages_1;
+
+		// Define counters
+		int counter = 0;
+		int counter_1 = 0;
+
+		// Get the source and destination vertices for the simulation
+		std::unordered_set< int > my_source_set = generateSource( vertices );
+		std::unordered_set< int > my_destinations = generateDestination( vertices, my_source_set ); 
+
+		for( auto iter = my_source_set.begin(); iter != my_source_set.end(); ++iter ) 
+		{
+			++counter;
+		       
+			for( auto it = my_destinations.begin(); it != my_destinations.end(); ++it ) 
+			{
+				 std::cout <<"Counter: "<< counter << " "
+					    <<"Counter_1: "<< ++counter_1 << " "
+					    <<"Source: "<< *iter << " "
+					    <<"Destination: "<< *it << std::endl;
+
+				 clock_t begin_0 = clock();
+				 DijkstraShortestPath( *iter, *it );
+				 clock_t end_0 = clock();
+				 double duration_0 = double( end_0 - begin_0 ) / CLOCKS_PER_SEC;
+
+				 // std::cout << std::endl;
+				 // std::cout << "DijkstraShortestPath duration: " << duration_0 << std::endl
+				 // std::cout << "Relaxed_edges: " << G.relaxed_edges << std::endl;
+				 
+				 total_duration += duration_0;
+				 total_relaxed_edges += relaxed_edges;
+				 relaxed_edges = 0;
+				 
+				 // std::cout << std::endl;
+				 clock_t begin_1 = clock();
+				 BiDijkstraShortestPath( *iter, *it );
+				 clock_t end_1 = clock();
+				 double duration_1 = double( end_1 - begin_1 ) / CLOCKS_PER_SEC;
+				 
+				 // std::cout << "BiDijkstraShortestPath duration"<< duration_1 << std::endl;
+				 // std::cout << "Relaxed_ edges: " << relaxed_edges_1 << std::endl;
+				 
+				 total_duration_1 += duration_1;
+				 total_relaxed_edges_1 += relaxed_edges_1;
+				 relaxed_edges_1 = 0;
+
+			}	
+
+			// Getting averages from the Dijkstra's Algorithm
+			average_duration = ( total_duration / 100.0 );
+			av_relaxed_edges = ( total_relaxed_edges / 100 );
+			averages.push_back( std::make_pair( average_duration, av_relaxed_edges ) );
+			total_duration = 0;
+			total_relaxed_edges = 0;
+
+			// Getting averages from the Bidirectional Dijkstra's Algorithm
+			average_duration_1 = ( total_duration_1 / 100.0 );
+			av_relaxed_edges_1 = ( total_relaxed_edges_1 /  100 );
+			averages_1.push_back( std::make_pair( average_duration_1, av_relaxed_edges_1 ) );
+			total_duration_1 = 0;
+			total_relaxed_edges_1 = 0;
+			counter_1 = 0;
+		}
+
+		std::cout << "Dijkstra averages set " << std::endl;
+		double total_dur = 0;
+		int total_edge = 0;
+		
+		for( auto iter = averages.begin(); iter != averages.end(); ++iter )
+		{
+			total_dur += ( *iter ).first; 
+			total_edge += ( *iter ).second; 
+			// std::cout <<"Average durations: " << ( *iter ).first << " " <<"Average Relaxed edges: "<<(*iter).second << std::endl;
+		}
+
+		std::cout << std::endl;
+		std::cout <<"Final Average time:" << ( total_dur / 10.0 ) << std::endl;
+		std::cout <<"Final Average Edge relaxed: " << ( total_edge / 10 ) << std::endl;
+
+		std::cout << std::endl;
+		// Bidirectional averages set 
+		std::cout <<"Bidirectional averages set" << std::endl;
+		total_dur = 0;
+		total_edge = 0;
+
+		for( auto iter = averages_1.begin(); iter != averages_1.end(); ++iter )
+		{
+			total_dur += ( *iter ).first;
+			total_edge += ( *iter ).second;
+			//std::cout <<"Average durations: " << ( *iter ).first <<" "<<"Average Relaxed edges: "<<( *iter ).second << std::endl; 
+		}
+
+		std::cout << "Final Average time: " << ( total_dur / 10.0 ) << std::endl;
+		std::cout << "Final Average relaxed Edge: "<< ( total_edge / 10 ) << std::endl;
+
+		eraseContainers();
+
+	}
+
 }

@@ -20,19 +20,14 @@
 #include <memory>
 #include <cstdlib>
 
-namespace file_sys = std::experimental::filesystem;
-
-
-
 #define INF 900000000 
 
-
+namespace file_sys = std::experimental::filesystem;
 
 class Graph 
 {
 	public:
 		Graph() = default; 
-		void allocateMemory( int );
 		void buildGraph( std::ifstream & my_file );
 		void add_edges( int, int, int );
 		void DijkstraShortestPath( int , int );
@@ -41,22 +36,18 @@ class Graph
 		void eraseContainers();
 		std::unordered_set<int> generateSource( int );
 		std::unordered_set<int> generateDestination( int, std::unordered_set<int> ); 
-		int num_vert;
-		int relaxed_edges;
-		int relaxed_edges_1;
-		~Graph()
-		{
-			delete adjacency_list;
-		}
+		void automateProcess();
+		int getVertices( std::ifstream & ); 
+		
+		~Graph(){ }
 
 	private:
 		int vertices;
+		int relaxed_edges;
+		int relaxed_edges_1;
 		std::list< std::pair< int, int > > *adjacency_list;
-
 		std::priority_queue< std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater< std::pair<int, int>> >  min_heap; 	
-
 		std::priority_queue< std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater< std::pair<int, int>> >  min_heap_;
-
 		std::priority_queue< std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater< std::pair<int, int>> >  min_heap_reverse;
 
 };
