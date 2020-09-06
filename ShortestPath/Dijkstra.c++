@@ -283,7 +283,7 @@ std::unordered_set<int> Graph::generateDestination( int vertices, std::unordered
 
 void Graph::automateProcess() { 
 
-	std::string path = "../../TestFiles";
+	std::string path = "../DataSet";
 
 	for( const auto & entry : file_sys::directory_iterator(path) ) {
 
