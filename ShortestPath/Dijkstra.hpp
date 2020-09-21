@@ -42,9 +42,9 @@ class Graph
 		~Graph(){ }
 
 	private:
-		int vertices;
-		int relaxed_edges;
-		int relaxed_edges_1;
+		int vertices = 0;
+		int relaxed_edges = 0;
+		int relaxed_edges_1 = 0;
 		std::list< std::pair< int, int > > *adjacency_list;
 		std::priority_queue< std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater< std::pair<int, int>> >  min_heap; 	
 		std::priority_queue< std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater< std::pair<int, int>> >  min_heap_;

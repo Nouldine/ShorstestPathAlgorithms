@@ -8,16 +8,16 @@ int Graph::getVertices( std::ifstream & my_file ) {
 
 	if( my_file.is_open() ) 
 	{
-		std::cout <<"The file is oponned" << std::endl;
+		std::cout <<"The file is openned" << std::endl;
 		if( my_file.good() ) 
 		{
-			// std::cout <<"The file is good" << std::endl;
+			std::cout <<"The file is good" << std::endl;
 			std::string str;
 			std::getline( my_file, str );
 			std::istringstream my_first_line(str);
 			my_first_line >> my_vertices >> num_edges;
 			 
-			//std::cout <<"MyVertices: " << my_vertices << std::endl;
+			std::cout <<"MyVertices: " << my_vertices << std::endl;
 			return my_vertices;
 		}
 	}
@@ -283,7 +283,7 @@ std::unordered_set<int> Graph::generateDestination( int vertices, std::unordered
 
 void Graph::automateProcess() { 
 
-	std::string path = "../DataSet";
+	std::string path = "../../../DataSet";
 
 	for( const auto & entry : file_sys::directory_iterator(path) ) {
 
